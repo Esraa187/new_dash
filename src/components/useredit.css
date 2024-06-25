@@ -1,0 +1,42 @@
+.user{
+    border: 1px solid #c4c1c1;
+    width: fit-content;
+    padding: 30px;
+    text-align: center;
+    margin: 40px auto;
+    border-radius: 5px;
+}
+.user label{
+    font-size: 17px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 10px;
+    color: #072554;
+    text-align: left;
+}
+.user input{
+    font-size: 18px;
+    border-radius: 5px;
+    padding: 10px;
+}
+.user input:focus{
+    outline:2px solid #0060fbaf;
+    border: 1px solid #eee;
+}
+.save{
+    width: 180px;
+    margin-left: 30px;
+    font-size: 16px;
+    background-color: #072554;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+.toghter{
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    column-gap: 30px;
+}

@@ -1,0 +1,35 @@
+.navbar{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #01192d;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+    
+}
+.toggle-icon{
+    font-size: 40px;
+    color: aliceblue;
+    margin-left: 20px;
+    
+}
+.notification{
+    position: absolute;
+    right: 120px;
+    color: aliceblue;
+    font-size: 25px;
+}
+.login{
+    position: absolute;
+    background-color: #084c83;
+    right: 30px;
+    color: aliceblue;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 7px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}

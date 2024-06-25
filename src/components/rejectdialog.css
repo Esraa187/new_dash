@@ -1,0 +1,30 @@
+.checkerror {
+    padding-right: 50px;
+    padding-top: 15px;
+    margin: 0 20px;
+}
+
+.rejecttitle {
+    text-align: center;
+    color: rgb(176, 12, 12);
+}
+
+.rejectcancel,
+.rejectsend {
+    color: #fff;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 7px;
+    font-size: 17px;
+    margin-bottom: 20px;
+}
+
+.rejectcancel {
+    background-color: rgb(188, 9, 9);
+
+}
+
+.rejectsend {
+    background-color: #1976d2;
+
+}

@@ -1,0 +1,45 @@
+.accept-btn,.reject-btn{
+    color: aliceblue;
+    border-radius: 6px;
+    padding: 10px 15px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    
+}
+.accept-btn{
+    background-color: #047804;
+    margin-right: 15px;
+}
+.reject-btn{
+    background-color: rgb(192, 5, 5);
+}
+.edit-btn{
+    background-color: rgb(90, 197, 233);
+    color: aliceblue;
+    border-radius: 6px;
+    padding: 10px 15px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+}
+.user-table{
+    padding: 20px;
+}
+.search{
+    height: 30px;
+    width: 250px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: -20px;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+}
+.search:focus{
+    border: 1px solid #0866e2;
+    outline: none;
+    box-shadow: 0px 0px 1px 4px #3684e962;
+}

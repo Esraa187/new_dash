@@ -1,0 +1,15 @@
+.container{
+  margin-top: 80px;
+  padding-top: 10px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 4px 3px 4px 10px #eee;
+}
+.aa{
+  min-height: 100vh;
+  margin-left: 270px;
+}
+header{
+  height: 50px;
+  background-color: aquamarine;
+}

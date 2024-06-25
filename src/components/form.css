@@ -1,0 +1,28 @@
+.form-dialog{
+    display: flex;
+    align-items: center;
+    height: 400px;
+}
+.formstyle{
+    background-color: #eee;
+    height: 100%;
+    width: 70%;
+}
+.formstyle img{
+    width: 250px;
+    height: 250px;
+    margin-top: 60px;
+    margin-left: 25px;
+}
+.dialog-title{
+    text-align: center;
+    font-size: 17px !important;
+    font-weight: 700;
+    color: #093170;
+}
+.dialog-title p{
+    margin-bottom: -5px;
+    font-size: 23px;
+    font-weight: 900;
+    color: #05204c;
+}

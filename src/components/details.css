@@ -1,0 +1,11 @@
+.title{
+    font-size: 25px;
+    font-weight: 700;
+    margin-left: 20px;
+    color: #063784;
+}
+hr{
+    height: 2px;
+    background-color: #063784;
+    margin-bottom: 30px;
+}

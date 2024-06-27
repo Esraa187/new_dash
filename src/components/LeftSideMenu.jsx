@@ -45,7 +45,7 @@ const LeftSideMenu = () => {
                         {dropdown ? (
                             <ul className="dropdown-menu">
                                 <li >
-                                    <Link to='/table'>
+                                    <Link to='/table' >
                                         <FaUserAlt className='menu-icons' />Users
                                     </Link>
                                 </li>
@@ -80,7 +80,7 @@ const LeftSideMenu = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link to='/table2'>
+                            <Link to='/charts'>
                                 <FaChartLine className='menu-icons' />Charts
                             </Link>
                         </li>

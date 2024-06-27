@@ -3,7 +3,6 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } 
 import './form.css';
 import photo from '../image/undraw_data_trends_re_2cdy (1).svg';
 import Cookies from 'js-cookie';
-import {  useNavigate } from 'react-router-dom';
 import { StatusContext } from '../context/StatusContext';
 
 function FormDialog({ open, handleClose }) {
@@ -12,7 +11,7 @@ function FormDialog({ open, handleClose }) {
         phone: '',
         password: '',
     });
-    const navigate = useNavigate();
+
     const [error, setError] = useState('');
 
     const handleChange = (e) => {

@@ -2,11 +2,17 @@ import React, { useState, useEffect, useContext } from 'react';
 import DataTable from 'react-data-table-component';
 import './table.css';
 import { useNavigate } from 'react-router-dom';
+import { Dialog, DialogContent } from '@mui/material';
 
 function PersonalData() {
     const [personalData, setPersonalData] = useState([]);
     const navigate = useNavigate();
-
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [open, setOpen] = useState(false);
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedImage(null);
+    };
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -28,10 +34,10 @@ function PersonalData() {
                 console.error('Error fetching data:', error);
             }
         };
-    
+
         fetchData();
     });
-    
+
 
     const customStyles = {
         rows: { style: {} },
@@ -55,12 +61,13 @@ function PersonalData() {
         { name: 'Nationality', selector: row => row.nationality, sortable: true, center: true },
         { name: 'Address', selector: row => row.address, sortable: true, center: true },
         { name: 'Profile Image', selector: row => <img src={row.profileImage} alt={row.name} onClick={() => grow(row.profileImage)} />, center: true, width: '150px' }
-        
+
     ];
 
 
     const grow = (item) => {
-        navigate('/image', { state: { item } });
+        setOpen(true)
+        setSelectedImage(item)
     };
 
     const handleReject = (id) => {
@@ -96,6 +103,12 @@ function PersonalData() {
                 pointerOnHover={true}
                 fixedHeader={true}
             />
+            <Dialog open={open} onClose={handleClose}  >
+                
+                <DialogContent>
+                    {selectedImage && <img src={selectedImage} alt="Selected" style={{width: "500px", height:"500px"}} />}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

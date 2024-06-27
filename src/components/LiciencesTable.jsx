@@ -1,12 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
 import DataTable from 'react-data-table-component'
-import { DataContext } from '../context/DataContext';
 import { useNavigate } from 'react-router-dom';
+import { Dialog, DialogContent } from '@mui/material';
 
 function LiciencesTable() {
     const [ licenseData, setLecienceTable ] = useState([]);
     const navigate = useNavigate();
-
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [open, setOpen] = useState(false);
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedImage(null);
+    };
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -67,7 +72,8 @@ function LiciencesTable() {
         cells: { style: { fontSize: '14px', backgroundColor: "#eee" } },
     };
     const grow=(item)=>{
-        navigate('/image',{state:{item}})
+        setOpen(true)
+        setSelectedImage(item)
     }
     const handleReject = (id) => {
         console.log(id)
@@ -91,6 +97,12 @@ function LiciencesTable() {
                 pointerOnHover={true}
                 fixedHeader={true}
             />
+            <Dialog open={open} onClose={handleClose}  >
+                
+                <DialogContent>
+                    {selectedImage && <img src={selectedImage} alt="Selected" style={{width: "500px", height:"500px"}} />}
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

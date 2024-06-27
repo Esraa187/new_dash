@@ -2,6 +2,8 @@
     position: fixed;
     width: 260px;
     height: 100%;
+    overflow: auto;
+    min-height: 100vh;
     left: -100%;
     top: 60px;
     background-color: #01192d;
@@ -30,6 +32,9 @@ ul li a .menu-icons{
     margin-right: 10px;
 }
 ul li a:hover{
+    background-color: #09306f;
+}
+ul li a:focus{
     background-color: #09306f;
 }
 .open-icon{

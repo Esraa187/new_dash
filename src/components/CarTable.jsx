@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import DataTable from 'react-data-table-component'
 import './table.css'
 import { useNavigate } from 'react-router-dom';
-import { DataContext } from '../context/DataContext';
 import { Dialog, DialogContent } from '@mui/material';
 
 function CarTable() {
@@ -12,7 +11,7 @@ function CarTable() {
         setOpen(false);
         setSelectedImage(null);
     };
-    const [ carData,setCarData ] = useState([]);
+    const [carData, setCarData] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,14 +34,14 @@ function CarTable() {
                 console.error('Error fetching data:', error);
             }
         };
-    
+
         fetchData();
     });
-    
+
 
 
     const getStatusString = (status) => {
-        switch(status) {
+        switch (status) {
             case 0:
                 return 'pending';
             case 1:
@@ -87,20 +86,24 @@ function CarTable() {
         { name: 'License Image Front', selector: row => <img src={row.licenseImageFront} alt={row.id} onClick={() => grow(row.licenseImageFront)} />, center: true, width: '200px' },
         { name: 'License Image Back', selector: row => <img src={row.licenseImageBack} alt={row.id} onClick={() => grow(row.licenseImageBack)} />, center: true, width: '200px' },
         { name: 'License Expiration', selector: row => row.licenseExpiration, sortable: true, center: true, width: '200px' },
-        {  name: 'Status',selector: row => getStatusString(row.status),sortable: true, center: true, width: '120px', conditionalCellStyles: [
-           { when: row => row.status === 0, style: { color: '#4199b6', fontSize: '16px', fontWeight: '700' } },
-           { when: row => row.status === 1, style: { color: 'green', fontSize: '16px', fontWeight: '700' } },
-           { when: row => row.status === 2, style: { color: 'red', fontSize: '16px', fontWeight: '700' } },
-       ] },
-       { name: 'Actions', selector: row => (
-        <div>
-            <button className='accept-btn' onClick={() => updateCarStatus(row, 'accepted')}>Accept</button>
-            <button className='reject-btn' onClick={() => updateCarStatus(row, 'rejected')}>Reject</button>
-        </div>
-    ), center: true , width: '200px' }
+        {
+            name: 'Status', selector: row => getStatusString(row.status), sortable: true, center: true, width: '120px', conditionalCellStyles: [
+                { when: row => row.status === 0, style: { color: '#4199b6', fontSize: '16px', fontWeight: '700' } },
+                { when: row => row.status === 1, style: { color: 'green', fontSize: '16px', fontWeight: '700' } },
+                { when: row => row.status === 2, style: { color: 'red', fontSize: '16px', fontWeight: '700' } },
+            ]
+        },
+        {
+            name: 'Actions', selector: row => (
+                <div>
+                    <button className='accept-btn' onClick={() => updateCarStatus(row, 'accepted')}>Accept</button>
+                    <button className='reject-btn' onClick={() => updateCarStatus(row, 'rejected')}>Reject</button>
+                </div>
+            ), center: true, width: '200px'
+        }
     ];
 
-    const grow=(item)=>{
+    const grow = (item) => {
         setOpen(true)
         setSelectedImage(item)
     }
@@ -135,9 +138,9 @@ function CarTable() {
                 fixedHeader={true}
             />
             <Dialog open={open} onClose={handleClose}  >
-                
+
                 <DialogContent>
-                    {selectedImage && <img src={selectedImage} alt="Selected" style={{width: "500px", height:"500px"}} />}
+                    {selectedImage && <img src={selectedImage} alt="Selected" style={{ width: "500px", height: "500px" }} />}
                 </DialogContent>
             </Dialog>
         </div>

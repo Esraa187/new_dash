@@ -4,20 +4,22 @@ import DataTable from 'react-data-table-component';
 import './details.css';
 import Cookies from 'js-cookie';
 import RejectDialog from './RejectDialog';
+import { Dialog, DialogContent } from '@mui/material';
 
 function DetailsTable() {
     const location = useLocation();
     const navigate = useNavigate();
     const [userData, setUserData] = useState([]);
-    const [userNotFound, setUserNotFound] = useState(false);
     const [carData, setCarData] = useState([]);
-    const [carNotFound, setCarNotFound] = useState(false);
     const [licenseData, setLicenseData] = useState([]);
-    const [licenseNotFound, setLicenseNotFound] = useState(false);
     const [tripData, setTripData] = useState([]);
-    const [tripNotFound, setTripNotFound] = useState(false);
     const [open, setOpen] = React.useState(false);
-
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [openimg, setOpenImg] = useState(false);
+    const handleCloseImg = () => {
+        setOpenImg(false);
+        setSelectedImage(null);
+    };
     const handleClose = () => {
         setOpen(false);
     };
@@ -35,19 +37,19 @@ function DetailsTable() {
             if (result.data) {
                 console.log("Fetched user data:", result.data);
                 setUserData([result.data]);
-                setUserNotFound(false);
+                
 
                 // Fetch car, license, and trip data using the fetched user data id
                 fetchCarData(result.data.id);
                 fetchLicenseData(result.data.id)
                 fetchTripData(result.data.id)
             } else {
-                setUserNotFound(true);
+                
                 setUserData([]);
             }
         } catch (error) {
             console.error("Error fetching user data:", error);
-            setUserNotFound(true);
+            
             setUserData([]);
         }
     };
@@ -65,14 +67,14 @@ function DetailsTable() {
             if (result.data) {
                 console.log("Fetched car data:", result.data);
                 setCarData([result.data]);
-                setCarNotFound(false);
+                
             } else {
-                setCarNotFound(true);
+                
                 setCarData([]);
             }
         } catch (error) {
             console.error("Error fetching car data:", error);
-            setCarNotFound(true);
+            
             setCarData([]);
         }
     };
@@ -90,14 +92,14 @@ function DetailsTable() {
             if (result.data) {
                 console.log("Fetched license data:", result.data);
                 setLicenseData([result.data]);
-                setLicenseNotFound(false);
+                
             } else {
-                setLicenseNotFound(true);
+                
                 setLicenseData([]);
             }
         } catch (error) {
             console.error("Error fetching license data:", error);
-            setLicenseNotFound(true);
+            
             setLicenseData([]);
         }
     };
@@ -124,14 +126,14 @@ function DetailsTable() {
                 };
 
                 setTripData([transformedData]);
-                setTripNotFound(false);
+                
             } else {
-                setTripNotFound(true);
+                
                 setTripData([]);
             }
         } catch (error) {
             console.error("Error fetching trip data:", error);
-            setTripNotFound(true);
+            
             setTripData([]);
         }
     };
@@ -250,7 +252,10 @@ function DetailsTable() {
         cells: { style: { fontSize: '14px', backgroundColor: "#eee" } },
     };
 
-    const grow = (item) => navigate('/image', { state: { item } });
+    const grow = (item) => {
+        setOpenImg(true)
+        setSelectedImage(item)
+    };
     const editCar = (row) => navigate("/caredit", { state: { row } });
 
     const updateCarStatus = async (row, Status) => {
@@ -374,6 +379,12 @@ function DetailsTable() {
             />
 
             <RejectDialog open={open} handleClose={handleClose} />
+
+            <Dialog open={openimg} onClose={handleCloseImg}  >
+                <DialogContent>
+                    {selectedImage && <img src={selectedImage} alt="Selected" style={{ width: "500px", height: "500px" }} />}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

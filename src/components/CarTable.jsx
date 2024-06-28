@@ -1,43 +1,48 @@
 import React, { useState, useEffect, useContext } from 'react';
-import DataTable from 'react-data-table-component'
-import './table.css'
+import DataTable from 'react-data-table-component';
+import './table.css';
+import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import RejectDialog from './RejectDialog';
 import { Dialog, DialogContent } from '@mui/material';
 
 function CarTable() {
+    const [open, setOpen] = React.useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
-    const [open, setOpen] = useState(false);
+    const [openimg, setOpenImg] = useState(false);
+    const handleCloseImg = () => {
+        setOpenImg(false);
+        setSelectedImage(null);
+    };
     const handleClose = () => {
         setOpen(false);
-        setSelectedImage(null);
     };
     const [carData, setCarData] = useState([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const token = document.cookie.split('; ').find(row => row.startsWith('token=')).split('=')[1];
-                const response = await fetch('https://vehicle-share-api.runasp.net/api/car/', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data');
-                }
-                const result = await response.json();
-                setCarData(result.data);
-
-            } catch (error) {
-                console.error('Error fetching data:', error);
+    const fetchCarData = async () => {
+        try {
+            const token = document.cookie.split('; ').find(row => row.startsWith('token=')).split('=')[1];
+            const response = await fetch('https://vehicle-share-api.runasp.net/api/car/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
             }
-        };
+            const result = await response.json();
+            setCarData(result.data);
 
-        fetchData();
-    });
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
+    useEffect(() => {
+        fetchCarData();
+    }, []);
 
 
     const getStatusString = (status) => {
@@ -96,17 +101,17 @@ function CarTable() {
         {
             name: 'Actions', selector: row => (
                 <div>
-                    <button className='accept-btn' onClick={() => updateCarStatus(row, 'accepted')}>Accept</button>
-                    <button className='reject-btn' onClick={() => updateCarStatus(row, 'rejected')}>Reject</button>
+                    <button className='accept-btn' onClick={() => updateCarStatus(row, 1)}>Accept</button>
+                    <button className='reject-btn' onClick={() => updateCarStatus(row, 2)}>Reject</button>
                 </div>
             ), center: true, width: '200px'
         }
     ];
 
     const grow = (item) => {
-        setOpen(true)
+        setOpenImg(true)
         setSelectedImage(item)
-    }
+    };
     const navigate = useNavigate();
     const handleRowClick = (row) => {
         navigate('/details', { state: row });
@@ -117,9 +122,38 @@ function CarTable() {
         })
         setCarData(newData)
     }
-    const updateCarStatus = (row, status) => {
-        // Update license data
-        console.log('License ID ${row.id} status updated to ${status}');
+    const updateCarStatus = async (row, Status) => {
+        try {
+            const carId = row.id;
+            const userDataId = row.userDataId;
+            console.log(`Car ID ${carId} status updated to ${getStatusString(Status)} : ${typeof (Status)} `);
+            const token = Cookies.get('token');
+
+            const requestBody = { status: Status };
+            if (Status === 2) {
+                setOpen(true);
+                requestBody.message = `License has been refused.`;
+            }
+            else {
+                alert(`Successfully updated status to: ${getStatusString(Status)} for Car ID ${carId}`);
+            }    
+            const response = await fetch(`https://vehicle-share-api.runasp.net/api/Car/Admin/${carId}`, {
+                method: 'Put', // or 'PUT' based on your API design
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody), // Send the status in the request body
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to update status: ${response.statusText}`);
+            }
+            await fetchCarData(userDataId);
+
+        } catch (error) {
+            console.error('Error updating car status:', error);
+        }
     };
 
     return (
@@ -137,8 +171,9 @@ function CarTable() {
                 pointerOnHover={true}
                 fixedHeader={true}
             />
-            <Dialog open={open} onClose={handleClose}  >
+            <RejectDialog open={open} handleClose={handleClose} />
 
+            <Dialog open={openimg} onClose={handleCloseImg}  >
                 <DialogContent>
                     {selectedImage && <img src={selectedImage} alt="Selected" style={{ width: "500px", height: "500px" }} />}
                 </DialogContent>

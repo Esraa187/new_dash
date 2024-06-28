@@ -26,7 +26,7 @@ function TripTable() {
                     to: `${trip.toLatitude}, ${trip.toLongitude}`,
                 }));
                 setTripData(transformedData);
-                console.log(transformedData)
+               // console.log(transformedData)
             } catch (error) {
                 console.error('Error fetching data:', error);
             }

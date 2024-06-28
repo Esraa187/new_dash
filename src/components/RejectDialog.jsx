@@ -8,7 +8,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import './rejectdialog.css'
 export default function RejectDialog({ open, handleClose }) {
-
     return (
         <React.Fragment>
 

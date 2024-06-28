@@ -37,19 +37,19 @@ function DetailsTable() {
             if (result.data) {
                 console.log("Fetched user data:", result.data);
                 setUserData([result.data]);
-                
+
 
                 // Fetch car, license, and trip data using the fetched user data id
                 fetchCarData(result.data.id);
                 fetchLicenseData(result.data.id)
                 fetchTripData(result.data.id)
             } else {
-                
+
                 setUserData([]);
             }
         } catch (error) {
             console.error("Error fetching user data:", error);
-            
+
             setUserData([]);
         }
     };
@@ -67,14 +67,14 @@ function DetailsTable() {
             if (result.data) {
                 console.log("Fetched car data:", result.data);
                 setCarData([result.data]);
-                
+
             } else {
-                
+
                 setCarData([]);
             }
         } catch (error) {
             console.error("Error fetching car data:", error);
-            
+
             setCarData([]);
         }
     };
@@ -92,14 +92,14 @@ function DetailsTable() {
             if (result.data) {
                 console.log("Fetched license data:", result.data);
                 setLicenseData([result.data]);
-                
+
             } else {
-                
+
                 setLicenseData([]);
             }
         } catch (error) {
             console.error("Error fetching license data:", error);
-            
+
             setLicenseData([]);
         }
     };
@@ -126,14 +126,14 @@ function DetailsTable() {
                 };
 
                 setTripData([transformedData]);
-                
+
             } else {
-                
+
                 setTripData([]);
             }
         } catch (error) {
             console.error("Error fetching trip data:", error);
-            
+
             setTripData([]);
         }
     };
@@ -179,6 +179,7 @@ function DetailsTable() {
                     <button className='accept-btn' onClick={() => updateUserDataStatus(row, 1)}>Accept</button>
                     <button className='reject-btn' onClick={() => updateUserDataStatus(row, 2)}>Reject</button>
                 </div>
+
             ), center: true, width: '200px'
         }
     ];
@@ -258,59 +259,73 @@ function DetailsTable() {
     };
     const editCar = (row) => navigate("/caredit", { state: { row } });
 
-    const updateCarStatus = async (row, Status) => {
-        try {
-            const carId = row.id;
-            const userDataId = row.userDataId;
-            console.log(`Car ID ${carId} status updated to ${getStatusString(Status)}`);
-            const token = Cookies.get('token');
-            const response = await fetch(`https://vehicle-share-api.runasp.net/api/Car/Admin/${carId}`, {
-                method: 'Put', // or 'PUT' based on your API design
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ status: Status }), // Send the status in the request body
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to update status: ${response.statusText}`);
-            }
-            await fetchCarData(userDataId);
-            // alert(`Successfully updated status to: ${getStatusString(Status)} for Car ID ${carId}`);
-            setOpen(true)
-
-
-
-        } catch (error) {
-            console.error('Error updating car status:', error);
-        }
-    };
+   
     const updateUserDataStatus = async (row, Status) => {
         try {
             const userDataId = row.id;
             console.log(`User data ID is : ${userDataId} , status is : ${getStatusString(Status)}`);
             const token = Cookies.get('token');
+
+            const requestBody = { status: Status };
+
+            if (Status === 2) {
+                setOpen(true);
+                requestBody.message = `userdata ID  has been refused.`;
+            }
+            else {
+             alert(`Successfully updated status to: ${getStatusString(Status)} for Userdata ID :  ${userDataId}`);
+            }
+
             const response = await fetch(`https://vehicle-share-api.runasp.net/api/UserData/Admin/${userDataId}`, {
                 method: 'Put', // or 'PUT' based on your API design
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status: Status }), // Send the status in the request body
+                body: JSON.stringify(requestBody), // Send the status in the request body
             });
 
             if (!response.ok) {
                 throw new Error(`Failed to update status: ${response.statusText}`);
             }
             fetchUserData();
-            // alert(`Successfully updated status to: ${getStatusString(Status)} for user data ID ${userDataId}`);
-            // fetchUserData();
-            //fetchUserData();
-            setOpen(true)
+
 
         } catch (error) {
             console.error('Error updating license status:', error);
+        }
+    };
+    const updateCarStatus = async (row, Status) => {
+        try {
+            const carId = row.id;
+            const userDataId = row.userDataId;
+            console.log(`Car ID ${carId} status updated to ${getStatusString(Status)} : ${typeof (Status)} `);
+            const token = Cookies.get('token');
+
+            const requestBody = { status: Status };
+            if (Status === 2) {
+                setOpen(true);
+                requestBody.message = `License has been refused.`;
+            }
+            else {
+                alert(`Successfully updated status to: ${getStatusString(Status)} for Car ID ${carId}`);
+            }    
+            const response = await fetch(`https://vehicle-share-api.runasp.net/api/Car/Admin/${carId}`, {
+                method: 'Put', // or 'PUT' based on your API design
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody), // Send the status in the request body
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to update status: ${response.statusText}`);
+            }
+            await fetchCarData(userDataId);
+
+        } catch (error) {
+            console.error('Error updating car status:', error);
         }
     };
     const updateLicenseStatus = async (row, Status) => {
@@ -319,21 +334,29 @@ function DetailsTable() {
             const userDataId = row.userDataId;
             console.log(`License ID ${licenseId} status updated to ${getStatusString(Status)}`);
             const token = Cookies.get('token');
-            const response = await fetch(`https://vehicle-share-api.runasp.net/api/License/Admin/${licenseId}`, {
+
+            const requestBody = { status: Status };
+           if (Status === 2) {
+                setOpen(true);
+                requestBody.message = `License has been refused.`;
+            }
+            else {
+            alert(`Successfully updated status to: ${getStatusString(Status)} for license ID : ${licenseId}`);
+            }         
+ const response = await fetch(`https://vehicle-share-api.runasp.net/api/License/Admin/${licenseId}`, {
                 method: 'Put', // or 'PUT' based on your API design
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status: Status }), // Send the status in the request body
+                body: JSON.stringify(requestBody), // Send the status in the request body
             });
 
             if (!response.ok) {
                 throw new Error(`Failed to update status: ${response.statusText}`);
             }
             await fetchLicenseData(userDataId);
-            // alert(`Successfully updated status to: ${getStatusString(Status)} for license ID ${licenseId}`);
-            setOpen(true)
+            
 
         } catch (error) {
             console.error('Error updating license status:', error);

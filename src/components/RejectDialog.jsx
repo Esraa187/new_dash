@@ -19,12 +19,22 @@ export default function RejectDialog({ open, handleClose }) {
             >
                 <DialogContent >
                     <h1 className='rejecttitle'>Rejected Reasons</h1>
-                    <FormGroup>
-                        <FormControlLabel control={<Checkbox defaultChecked />} label="Error Lorem ipsum, dolor sit amet consectetur adipisicing." className='checkerror' />
-                        <FormControlLabel control={<Checkbox defaultChecked />} label="Error Lorem ipsum, dolor sit amet consectetur adipisicing." className='checkerror' />
-                        <FormControlLabel control={<Checkbox defaultChecked />} label="Error Lorem ipsum, dolor sit amet consectetur adipisicing." className='checkerror' />
-                        <FormControlLabel control={<Checkbox defaultChecked />} label="Error Lorem ipsum, dolor sit amet consectetur adipisicing." className='checkerror' />
-                    </FormGroup>
+                    <div className='check-container'>
+                        <input type="checkbox" className='checbox' />
+                        <label className='checkerror'>"Error Lorem ipsum, dolor sit amet consectetur adipisicing." </label>
+                    </div>
+                    <div className='check-container'>
+                        <input type="checkbox" className='checbox' />
+                        <label className='checkerror'>"Error Lorem ipsum, dolor sit amet consectetur adipisicing." </label>
+                    </div>
+                    <div className='check-container'>
+                        <input type="checkbox" className='checbox' />
+                        <label className='checkerror'>"Error Lorem ipsum, dolor sit amet consectetur adipisicing." </label>
+                    </div>
+                    <div className='check-container'>
+                        <input type="checkbox" className='checbox' />
+                        <label className='checkerror'>"Error Lorem ipsum, dolor sit amet consectetur adipisicing." </label>
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <button onClick={handleClose} className='rejectcancel'>Cansel</button>

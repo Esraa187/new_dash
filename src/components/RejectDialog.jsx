@@ -23,8 +23,9 @@ export default function RejectDialog({ open, handleClose }) {
         }));
     };
 
-    const getSelectedCheckboxes = () => {
-        return Object.keys(checkboxes).filter((key) => checkboxes[key]);
+    const printSelectedCheckboxes = () => {
+        const selectedCheckboxes = Object.keys(checkboxes).filter((key) => checkboxes[key]);
+        console.log('Selected checkboxes:', selectedCheckboxes);
     };
     return (
         <React.Fragment>
@@ -79,7 +80,7 @@ export default function RejectDialog({ open, handleClose }) {
                 </DialogContent>
                 <DialogActions>
                     <button onClick={handleClose} className='rejectcancel'>Cansel</button>
-                    <button onClick={handleClose} className='rejectsend'>Send</button>
+                    <button onClick={printSelectedCheckboxes} className='rejectsend'>Send</button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>

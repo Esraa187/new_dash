@@ -4,8 +4,11 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import RejectDialog from './RejectDialog';
 import { Dialog, DialogContent } from '@mui/material';
+import { StatusContext } from '../context/StatusContext';
 
 function LiciencesTable() {
+  const { checkerror } = useContext(StatusContext);
+
     const [ licenseData, setLecienceTable ] = useState([]);
     const navigate = useNavigate();
     const [selectedImage, setSelectedImage] = useState(null);
@@ -88,6 +91,7 @@ function LiciencesTable() {
             const requestBody = { status: Status };
            if (Status === 2) {
                 setOpen(true);
+                console.log(checkerror);
                 requestBody.message = `License has been refused.`;
             }
             else {

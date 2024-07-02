@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState , useContext} from 'react'
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -7,12 +7,15 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import './rejectdialog.css'
+import { StatusContext } from '../context/StatusContext';
 export default function RejectDialog({ open, handleClose }) {
+  const { checkerror, setCheckError } = useContext(StatusContext);
+
     const [checkboxes, setCheckboxes] = useState({
-        checkbox1: false,
-        checkbox2: false,
-        checkbox3: false,
-        checkbox4: false,
+        100: false,
+        101: false,
+        102: false,
+        103: false,
     });
 
     const handleCheckboxChange = (event) => {
@@ -26,12 +29,6 @@ export default function RejectDialog({ open, handleClose }) {
     const printSelectedCheckboxes = () => {
         const selectedCheckboxes = Object.keys(checkboxes).filter((key) => checkboxes[key]);
         console.log('Selected checkboxes:', selectedCheckboxes);
-        setCheckboxes({
-            checkbox1: false,
-            checkbox2: false,
-            checkbox3: false,
-            checkbox4: false,
-        })
     };
     return (
         <React.Fragment>
@@ -47,7 +44,7 @@ export default function RejectDialog({ open, handleClose }) {
                     <div className='check-container'>
                         <input type="checkbox"
                             className='checbox'
-                            name="checkbox1"
+                            name="100"
                             checked={checkboxes.checkbox1}
                             onChange={handleCheckboxChange} />
                         <label className='checkerror'>"Error Lorem ipsum, dolor sit amet consectetur adipisicing." </label>
@@ -55,7 +52,7 @@ export default function RejectDialog({ open, handleClose }) {
                     <div className='check-container'>
                         <input type="checkbox"
                             className='checbox'
-                            name="checkbox2"
+                            name="101"
                             checked={checkboxes.checkbox2}
                             onChange={handleCheckboxChange}
                         />
@@ -64,7 +61,7 @@ export default function RejectDialog({ open, handleClose }) {
                     <div className='check-container'>
                         <input type="checkbox"
                             className='checbox'
-                            name="checkbox3"
+                            name="102"
                             checked={checkboxes.checkbox3}
                             onChange={handleCheckboxChange} />
                         <label className='checkerror'>"Error Lorem ipsum, dolor sit amet consectetur adipisicing." </label>
@@ -72,7 +69,7 @@ export default function RejectDialog({ open, handleClose }) {
                     <div className='check-container'>
                         <input type="checkbox"
                             className='checbox'
-                            name="checkbox4"
+                            name="103"
                             checked={checkboxes.checkbox4}
                             onChange={handleCheckboxChange} />
                         <label className='checkerror'>"Error Lorem ipsum, dolor sit amet consectetur adipisicing." </label>

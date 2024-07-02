@@ -26,6 +26,12 @@ export default function RejectDialog({ open, handleClose }) {
     const printSelectedCheckboxes = () => {
         const selectedCheckboxes = Object.keys(checkboxes).filter((key) => checkboxes[key]);
         console.log('Selected checkboxes:', selectedCheckboxes);
+        setCheckboxes({
+            checkbox1: false,
+            checkbox2: false,
+            checkbox3: false,
+            checkbox4: false,
+        })
     };
     return (
         <React.Fragment>

@@ -30,7 +30,7 @@ export default function RejectDialog({ open, handleClose }) {
         const selectedCheckboxes = Object.keys(checkboxes).filter((key) => checkboxes[key]);
         setCheckError(selectedCheckboxes);
         console.log('Selected checkboxes:', selectedCheckboxes);
-        console.log(checkerror.toString());
+        setCheckError(selectedCheckboxes)
     };
     return (
         <React.Fragment>

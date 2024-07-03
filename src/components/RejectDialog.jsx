@@ -31,6 +31,12 @@ export default function RejectDialog({ open, handleClose, updateLicenseStatus, r
         handleClose(); // Close the dialog
         if (callback) callback(); // Execute the callback after the state update
         console.log('Selected checkboxes:', selectedCheckboxes);
+        setCheckboxes({
+            100: false,
+            101: false,
+            102: false,
+            103: false,
+        })
     };
 
     const handleSend = () => {

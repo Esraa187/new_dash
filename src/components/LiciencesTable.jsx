@@ -13,6 +13,14 @@ function LiciencesTable() {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
   const [open, setOpen] = React.useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [status, setStatus] = useState(null);
+
+  const handleOpen = (row, status) => {
+      setSelectedRow(row);
+      setStatus(status);
+      setOpen(true);
+  };
   const [openimg, setOpenImg] = useState(false);
   const handleCloseImg = () => {
     setOpenImg(false);
@@ -21,6 +29,9 @@ function LiciencesTable() {
   const handleClose = () => {
     setOpen(false);
   };
+  useEffect(() => {
+   // console.log(checkerror.toString());
+}, [checkerror]);
   const fetchLicenseData = async () => {
     try {
       const token = document.cookie
@@ -136,7 +147,7 @@ function LiciencesTable() {
           </button>
           <button
             className="reject-btn"
-            onClick={() => updateLicenseStatus(row, 2)}
+            onClick={() => handleOpen(row, 2)}
           >
             Reject
           </button>
@@ -146,49 +157,124 @@ function LiciencesTable() {
       width: "200px",
     },
   ];
-  const updateLicenseStatus = async (row, Status) => {
+//   const updateLicenseStatus = async (row, Status) => {
+//     try {
+//       const licenseId = row.id;
+//       const userDataId = row.userDataId;
+//       console.log(
+//         `License ID ${licenseId} status updated to ${getStatusString(Status)}`
+//       );
+//       const token = Cookies.get("token");
+
+//       const requestBody = { status: Status };
+//       if (Status === 2) {
+//         setOpen(true);
+//         let error = checkerror.toString();
+//         requestBody.message = `License has been refused.`;
+//         console.log(`the error is ${error}`);
+//       } else {
+//         alert(
+//           `Successfully updated status to: ${getStatusString(
+//             Status
+//           )} for license ID : ${licenseId}`
+//         );
+//       }
+//       const response = await fetch(
+//         `https://vehicle-share-api.runasp.net/api/License/Admin/${licenseId}`,
+//         {
+//           method: "Put", // or 'PUT' based on your API design
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "application/json",
+//           },
+//           body: JSON.stringify(requestBody), // Send the status in the request body
+//         }
+//       );
+
+//       if (!response.ok) {
+//         throw new Error(`Failed to update status: ${response.statusText}`);
+//       }
+//       await fetchLicenseData(userDataId);
+//     } catch (error) {
+//       console.error("Error updating license status:", error);
+//     }
+//   };
+//   const updateLicenseStatus = async (row, Status, callback) => {
+//     try {
+//       const licenseId = row.id;
+//       const userDataId = row.userDataId;
+//       console.log(`License ID ${licenseId} status updated to ${getStatusString(Status)}`);
+//       const token = Cookies.get("token");
+
+//       const requestBody = { status: Status };
+//       if (Status === 2) {
+//         let error = checkerror.toString(); // Use checkerror from the context
+//         requestBody.message = `License has been refused. Reasons: ${error}`;
+//         console.log(`The error is: ${error}`);
+//       } else {
+//         alert(`Successfully updated status to: ${getStatusString(Status)} for license ID : ${licenseId}`);
+//       }
+      
+//       const response = await fetch(
+//         `https://vehicle-share-api.runasp.net/api/License/Admin/${licenseId}`,
+//         {
+//           method: "PUT",
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "application/json",
+//           },
+//           body: JSON.stringify(requestBody), // Send the status in the request body
+//         }
+//       );
+
+//       if (!response.ok) {
+//         throw new Error(`Failed to update status: ${response.statusText}`);
+//       }
+//       await fetchLicenseData(userDataId);
+//       if (callback) callback(); // Execute the callback after updating the license status
+//     } catch (error) {
+//       console.error("Error updating license status:", error);
+//     }
+// };
+const updateLicenseStatus = async (row , Status) => {
     try {
-      const licenseId = row.id;
-      const userDataId = row.userDataId;
-      console.log(
-        `License ID ${licenseId} status updated to ${getStatusString(Status)}`
-      );
-      const token = Cookies.get("token");
+       // debugger;
+        const licenseId = row.id;
+        const userDataId = row.userDataId;
+        console.log(`License ID ${licenseId} status updated to ${getStatusString(Status)}`);
+        const token = Cookies.get("token");
 
-      const requestBody = { status: Status };
-      if (Status === 2) {
-        setOpen(true);
-        let error = checkerror.toString();
-        console.log();
-        requestBody.message = `License has been refused.`;
-        console.log(error);
-      } else {
-        alert(
-          `Successfully updated status to: ${getStatusString(
-            Status
-          )} for license ID : ${licenseId}`
-        );
-      }
-      const response = await fetch(
-        `https://vehicle-share-api.runasp.net/api/License/Admin/${licenseId}`,
-        {
-          method: "Put", // or 'PUT' based on your API design
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody), // Send the status in the request body
+        const requestBody = { status: Status };
+        if (Status === 2) {
+            let error = checkerror.toString(); // Use checkerror from the context
+            requestBody.message = `License has been refused. Reasons: ${error}`;
+            console.log(`The error is: ${error}`);
+            
+        } else {
+            alert(`Successfully updated status to: ${getStatusString(Status)} for license ID : ${licenseId}`);
         }
-      );
+        
+        const response = await fetch(
+            `https://vehicle-share-api.runasp.net/api/License/Admin/${licenseId}`,
+            {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestBody), // Send the status in the request body
+            }
+        );
 
-      if (!response.ok) {
-        throw new Error(`Failed to update status: ${response.statusText}`);
-      }
-      await fetchLicenseData(userDataId);
+        if (!response.ok) {
+            throw new Error(`Failed to update status: ${response.statusText}`);
+        }
+        await fetchLicenseData(userDataId);
     } catch (error) {
-      console.error("Error updating license status:", error);
+        console.error("Error updating license status:", error);
     }
-  };
+};
+
 
   const customStyles = {
     headCells: {
@@ -226,8 +312,13 @@ function LiciencesTable() {
         pointerOnHover={true}
         fixedHeader={true}
       />
-      <RejectDialog open={open} handleClose={handleClose} />
-
+      <RejectDialog 
+                open={open} 
+                handleClose={handleClose} 
+                updateLicenseStatus={updateLicenseStatus} 
+                row={selectedRow} 
+                status={status} 
+            />
       <Dialog open={openimg} onClose={handleCloseImg}>
         <DialogContent>
           {selectedImage && (

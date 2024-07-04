@@ -14,6 +14,8 @@ export default function RejectDialog({ open, handleClose, updateLicenseStatus, r
         102: false,
         103: false,
     });
+    const [callback, setCallback] = useState(null);
+
 
     const handleCheckboxChange = (event) => {
         const { name, checked } = event.target;
@@ -26,16 +28,17 @@ export default function RejectDialog({ open, handleClose, updateLicenseStatus, r
     
     useEffect(() => {
         updateLicenseStatus(row, status);
-    }, [checkerror]);
+    }, [callback]);
 
-    const printSelectedCheckboxes = () => {
+    const printSelectedCheckboxes = (callback) => {
         const selectedCheckboxes = Object.keys(checkboxes).filter((key) => checkboxes[key]);
         setCheckError(selectedCheckboxes); // Set check error with selected checkboxes
         handleClose(); // Close the dialog
         console.log('Selected checkboxes:', selectedCheckboxes);
 
         // Set the callback to be executed after state update
-        updateLicenseStatus(row, status);
+        // updateLicenseStatus(row, status);
+        setCallback(() => callback);
         // Reset the checkboxes state
         setCheckboxes({
             100: false,
@@ -47,7 +50,9 @@ export default function RejectDialog({ open, handleClose, updateLicenseStatus, r
 
     
     const handleSend = () => {
-        printSelectedCheckboxes();
+        printSelectedCheckboxes(() => {
+            updateLicenseStatus(row, status);
+        });
     };
 
 

@@ -318,7 +318,7 @@ const updateLicenseStatus = async (row , Status) => {
                 updateLicenseStatus={updateLicenseStatus} 
                 row={selectedRow} 
                 status={status} 
-            />
+      />
       <Dialog open={openimg} onClose={handleCloseImg}>
         <DialogContent>
           {selectedImage && (

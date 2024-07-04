@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect ,useCallback} from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -8,7 +8,6 @@ import { StatusContext } from '../context/StatusContext';
 
 export default function RejectDialog({ open, handleClose, updateLicenseStatus, row, status }) {
     const { checkerror, setCheckError } = useContext(StatusContext);
-
     const [checkboxes, setCheckboxes] = useState({
         100: false,
         101: false,
@@ -24,30 +23,37 @@ export default function RejectDialog({ open, handleClose, updateLicenseStatus, r
         }));
     };
 
-    const printSelectedCheckboxes = (callback) => {
+    
+    useEffect(() => {
+        updateLicenseStatus(row, status);
+    }, [checkerror]);
+
+    const printSelectedCheckboxes = () => {
         const selectedCheckboxes = Object.keys(checkboxes).filter((key) => checkboxes[key]);
-        setCheckError([]); // Reset checkerror state to empty array
-        setCheckError(selectedCheckboxes); // Set checkerror with selected checkboxes
+        setCheckError(selectedCheckboxes); // Set check error with selected checkboxes
         handleClose(); // Close the dialog
-        if (callback) callback(); // Execute the callback after the state update
         console.log('Selected checkboxes:', selectedCheckboxes);
+
+        // Set the callback to be executed after state update
+        updateLicenseStatus(row, status);
+        // Reset the checkboxes state
         setCheckboxes({
             100: false,
             101: false,
             102: false,
             103: false,
-        })
-    };
-
-    const handleSend = () => {
-        printSelectedCheckboxes(() => {
-            updateLicenseStatus(row, status);
         });
     };
 
-    useEffect(() => {
-        console.log(checkerror.toString());
-    }, [checkerror]);
+    
+    const handleSend = () => {
+        printSelectedCheckboxes();
+    };
+
+
+    // useEffect(() => {
+    //     console.log(checkerror.toString());
+    // }, [checkerror]);
 
     return (
         <React.Fragment>

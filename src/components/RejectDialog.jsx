@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect ,useCallback} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -6,17 +6,22 @@ import DialogContent from '@mui/material/DialogContent';
 import './rejectdialog.css';
 import { StatusContext } from '../context/StatusContext';
 
-export default function RejectDialog({ open, handleClose, updateLicenseStatus, row, status }) {
+export default function RejectDialog({ open, handleClose, updateStatus, row, status, source }) {
     const { checkerror, setCheckError } = useContext(StatusContext);
-    const [checkboxes, setCheckboxes] = useState({
+    
+    const initialCheckboxes = source === 'license' ? {
+        100: false,
+        101: false,
+        102: false,
+    } : {
         100: false,
         101: false,
         102: false,
         103: false,
-    });
+    };
+    const [checkboxes, setCheckboxes] = useState(initialCheckboxes);
     const [callback, setCallback] = useState(null);
-
-
+  
     const handleCheckboxChange = (event) => {
         const { name, checked } = event.target;
         setCheckboxes((prevState) => ({
@@ -25,10 +30,15 @@ export default function RejectDialog({ open, handleClose, updateLicenseStatus, r
         }));
     };
 
-    
-    useEffect(() => {
-        updateLicenseStatus(row, status);
-    }, [callback]);
+    // useEffect(() => {
+    //     if (source === 'license') {
+    //         updateStatus(row, status);
+    //     } else if (source === 'personal') {
+    //         updateStatus(row, status);
+    //     } else if (source === 'car') {
+    //         updateStatus(row, status);
+    //     }
+    // }, [callback]);
 
     const printSelectedCheckboxes = (callback) => {
         const selectedCheckboxes = Object.keys(checkboxes).filter((key) => checkboxes[key]);
@@ -36,29 +46,48 @@ export default function RejectDialog({ open, handleClose, updateLicenseStatus, r
         handleClose(); // Close the dialog
         console.log('Selected checkboxes:', selectedCheckboxes);
 
-        // Set the callback to be executed after state update
-        // updateLicenseStatus(row, status);
         setCallback(() => callback);
-        // Reset the checkboxes state
-        setCheckboxes({
-            100: false,
-            101: false,
-            102: false,
-            103: false,
-        });
+        setCheckboxes(initialCheckboxes);
     };
 
-    
     const handleSend = () => {
         printSelectedCheckboxes(() => {
-            updateLicenseStatus(row, status);
+            if (source === 'license') {
+                updateStatus(row, status);
+            } else if (source === 'personal') {
+                updateStatus(row, status);
+            } else if (source === 'car') {
+                updateStatus(row, status);
+            }
         });
     };
 
+    const getLabel = (id) => {
+        if (source === 'personal') {
+            return {
+                100: 'The face of personal card is wrong or not clear ',
+                101: 'The back of personal card is wrong or not clear ',
+                102: 'The national number is wrong ',
+                103: 'The personal image is wrong or not clear ',
+            }[id];
+        } else if (source === 'license') {
+            return {
+                100: 'The face of the personal License is wrong or not clear',
+                101: 'The back of the personal License is wrong or not clear ',
+                102: 'The expiration date of personal License is wrong',
+            }[id];
+        } else if (source === 'car') {
+            return {
+                100: 'The face of the Car License is wrong or not clear ',
+                101: 'The back of the Car License is wrong or not clear ',
+                102: 'The expiration date of Car License is wrong ',
+                103: 'The car picture is wrong or not clear ',
+            }[id];
+        }
+        return 'Error';
+    };
 
-    // useEffect(() => {
-    //     console.log(checkerror.toString());
-    // }, [checkerror]);
+    const checkboxIds = source === 'license' ? [100, 101, 102] : [100, 101, 102, 103];
 
     return (
         <React.Fragment>
@@ -70,39 +99,16 @@ export default function RejectDialog({ open, handleClose, updateLicenseStatus, r
             >
                 <DialogContent>
                     <h1 className='rejecttitle'>Rejected Reasons</h1>
-                    <div className='check-container'>
-                        <input type="checkbox"
-                            className='checbox'
-                            name="100"
-                            checked={checkboxes[100]}
-                            onChange={handleCheckboxChange} />
-                        <label className='checkerror'>"Error Lorem ipsum, dolor sit amet consectetur adipisicing." </label>
-                    </div>
-                    <div className='check-container'>
-                        <input type="checkbox"
-                            className='checbox'
-                            name="101"
-                            checked={checkboxes[101]}
-                            onChange={handleCheckboxChange}
-                        />
-                        <label className='checkerror'>"Error Lorem ipsum, dolor sit amet consectetur adipisicing." </label>
-                    </div>
-                    <div className='check-container'>
-                        <input type="checkbox"
-                            className='checbox'
-                            name="102"
-                            checked={checkboxes[102]}
-                            onChange={handleCheckboxChange} />
-                        <label className='checkerror'>"Error Lorem ipsum, dolor sit amet consectetur adipisicing." </label>
-                    </div>
-                    <div className='check-container'>
-                        <input type="checkbox"
-                            className='checbox'
-                            name="103"
-                            checked={checkboxes[103]}
-                            onChange={handleCheckboxChange} />
-                        <label className='checkerror'>"Error Lorem ipsum, dolor sit amet consectetur adipisicing." </label>
-                    </div>
+                    {checkboxIds.map((id) => (
+                        <div className='check-container' key={id}>
+                            <input type="checkbox"
+                                className='checbox'
+                                name={id.toString()}
+                                checked={checkboxes[id]}
+                                onChange={handleCheckboxChange} />
+                            <label className='checkerror'>{getLabel(id)}</label>
+                        </div>
+                    ))}
                 </DialogContent>
                 <DialogActions>
                     <button onClick={handleClose} className='rejectcancel'>Cancel</button>

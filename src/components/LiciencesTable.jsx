@@ -30,8 +30,9 @@ function LiciencesTable() {
     setOpen(false);
   };
   useEffect(() => {
-   // console.log(checkerror.toString());
+    updateLicenseStatus(selectedRow, status);
 }, [checkerror]);
+
   const fetchLicenseData = async () => {
     try {
       const token = document.cookie
@@ -75,167 +76,21 @@ function LiciencesTable() {
     }
   };
   const licenseColumns = [
-    {
-      name: "ID",
-      selector: (row) => row.id,
-      sortable: true,
-      center: true,
-      width: "300px",
-    },
-    {
-      name: "Image Front",
-      selector: (row) => (
-        <img
-          src={row.imageFront}
-          alt={row.id}
-          onClick={() => grow(row.imageFront)}
-        />
-      ),
-      center: true,
-      width: "175px",
-    },
-    {
-      name: "Image Back",
-      selector: (row) => (
-        <img
-          src={row.imageBack}
-          alt={row.id}
-          onClick={() => grow(row.imageBack)}
-        />
-      ),
-      center: true,
-      width: "175px",
-    },
-    {
-      name: "Expiration",
-      selector: (row) => row.expiration,
-      sortable: true,
-      center: true,
-    },
+    { name: "ID", selector: (row) => row.id, sortable: true, center: true, width: "300px",},
+    {name: "Image Front",selector: (row) => (<img  src={row.imageFront}  alt={row.id}  onClick={() => grow(row.imageFront)}/>),center: true,width: "175px",},
+    {name: "Image Back",selector: (row) => (  <img    src={row.imageBack}    alt={row.id}    onClick={() => grow(row.imageBack)}  />),center: true,width: "175px",},
+    {name: "Expiration",selector: (row) => row.expiration,sortable: true,center: true,},
     // Add more columns as needed
 
-    {
-      name: "Status",
-      selector: (row) => getStatusString(row.status),
-      sortable: true,
-      center: true,
-      width: "120px",
-      conditionalCellStyles: [
-        {
-          when: (row) => row.status === 0,
-          style: { color: "#4199b6", fontSize: "16px", fontWeight: "700" },
-        },
-        {
-          when: (row) => row.status === 1,
-          style: { color: "green", fontSize: "16px", fontWeight: "700" },
-        },
-        {
-          when: (row) => row.status === 2,
-          style: { color: "red", fontSize: "16px", fontWeight: "700" },
-        },
-      ],
-    },
-    {
-      name: "Actions",
-      selector: (row) => (
-        <div>
-          <button
-            className="accept-btn"
-            onClick={() => updateLicenseStatus(row, 1)}
-          >
-            Accept
-          </button>
-          <button
-            className="reject-btn"
-            onClick={() => handleOpen(row, 2)}
-          >
-            Reject
-          </button>
-        </div>
-      ),
-      center: true,
-      width: "200px",
+    {name: "Status",selector: (row) => getStatusString(row.status),sortable: true,center: true,width: "120px",conditionalCellStyles: [  {    when: (row) => row.status === 0,    style: { color: "#4199b6", fontSize: "16px", fontWeight: "700" },  },  {    when: (row) => row.status === 1,    style: { color: "green", fontSize: "16px", fontWeight: "700" },  },  {    when: (row) => row.status === 2,    style: { color: "red", fontSize: "16px", fontWeight: "700" },  },],},
+    {name: "Actions",
+      selector: (row) => (  <div>    
+        <button className="accept-btn" onClick={() => updateLicenseStatus(row, 1)}>Accept</button>  
+        <button className="reject-btn"  onClick={() => handleOpen(row, 2)}>Reject</button>  
+        </div>),center: true,width: "200px",
     },
   ];
-//   const updateLicenseStatus = async (row, Status) => {
-//     try {
-//       const licenseId = row.id;
-//       const userDataId = row.userDataId;
-//       console.log(
-//         `License ID ${licenseId} status updated to ${getStatusString(Status)}`
-//       );
-//       const token = Cookies.get("token");
 
-//       const requestBody = { status: Status };
-//       if (Status === 2) {
-//         setOpen(true);
-//         let error = checkerror.toString();
-//         requestBody.message = `License has been refused.`;
-//         console.log(`the error is ${error}`);
-//       } else {
-//         alert(
-//           `Successfully updated status to: ${getStatusString(
-//             Status
-//           )} for license ID : ${licenseId}`
-//         );
-//       }
-//       const response = await fetch(
-//         `https://vehicle-share-api.runasp.net/api/License/Admin/${licenseId}`,
-//         {
-//           method: "Put", // or 'PUT' based on your API design
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify(requestBody), // Send the status in the request body
-//         }
-//       );
-
-//       if (!response.ok) {
-//         throw new Error(`Failed to update status: ${response.statusText}`);
-//       }
-//       await fetchLicenseData(userDataId);
-//     } catch (error) {
-//       console.error("Error updating license status:", error);
-//     }
-//   };
-//   const updateLicenseStatus = async (row, Status, callback) => {
-//     try {
-//       const licenseId = row.id;
-//       const userDataId = row.userDataId;
-//       console.log(`License ID ${licenseId} status updated to ${getStatusString(Status)}`);
-//       const token = Cookies.get("token");
-
-//       const requestBody = { status: Status };
-//       if (Status === 2) {
-//         let error = checkerror.toString(); // Use checkerror from the context
-//         requestBody.message = `License has been refused. Reasons: ${error}`;
-//         console.log(`The error is: ${error}`);
-//       } else {
-//         alert(`Successfully updated status to: ${getStatusString(Status)} for license ID : ${licenseId}`);
-//       }
-      
-//       const response = await fetch(
-//         `https://vehicle-share-api.runasp.net/api/License/Admin/${licenseId}`,
-//         {
-//           method: "PUT",
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify(requestBody), // Send the status in the request body
-//         }
-//       );
-
-//       if (!response.ok) {
-//         throw new Error(`Failed to update status: ${response.statusText}`);
-//       }
-//       await fetchLicenseData(userDataId);
-//       if (callback) callback(); // Execute the callback after updating the license status
-//     } catch (error) {
-//       console.error("Error updating license status:", error);
-//     }
-// };
 const updateLicenseStatus = async (row , Status) => {
     try {
        // debugger;
@@ -247,7 +102,7 @@ const updateLicenseStatus = async (row , Status) => {
         const requestBody = { status: Status };
         if (Status === 2) {
             let error = checkerror.toString(); // Use checkerror from the context
-            requestBody.message = `License has been refused. Reasons: ${error}`;
+            requestBody.message = error;
             console.log(`The error is: ${error}`);
             
         } else {
@@ -315,10 +170,12 @@ const updateLicenseStatus = async (row , Status) => {
       <RejectDialog 
                 open={open} 
                 handleClose={handleClose} 
-                updateLicenseStatus={updateLicenseStatus} 
+                updateStatus={updateLicenseStatus} 
                 row={selectedRow} 
                 status={status} 
+                source="license"
       />
+      
       <Dialog open={openimg} onClose={handleCloseImg}>
         <DialogContent>
           {selectedImage && (

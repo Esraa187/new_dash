@@ -1,28 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import './details.css';
 import Cookies from 'js-cookie';
 import RejectDialog from './RejectDialog';
 import { Dialog, DialogContent } from '@mui/material';
+import { StatusContext } from "../context/StatusContext";
 
 function DetailsTable() {
+    const { checkerror } = useContext(StatusContext);
     const location = useLocation();
     const navigate = useNavigate();
     const [userData, setUserData] = useState([]);
     const [carData, setCarData] = useState([]);
     const [licenseData, setLicenseData] = useState([]);
     const [tripData, setTripData] = useState([]);
-    const [open, setOpen] = React.useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [openimg, setOpenImg] = useState(false);
+    const [open, setOpen] = React.useState(false);
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [status, setStatus] = useState(null);
+    const [source, setSource] = useState(null);
+    const [updateStatusFunc, setUpdateStatus] = useState(null);
+  
+    const handleOpen = (updateStatusFunc,source ,row, status) => {
+        setSelectedRow(row);
+        setStatus(status);
+        setUpdateStatus(() => updateStatusFunc);
+        setSource(source);
+        setOpen(true);
+    };
     const handleCloseImg = () => {
         setOpenImg(false);
         setSelectedImage(null);
     };
     const handleClose = () => {
         setOpen(false);
-    };
+      };
+      useEffect(() => {
+        if (source === 'license') {
+            updateLicenseStatus(selectedRow, status);
+        } else if (source === 'personal') {
+            updateUserDataStatus(selectedRow, status);
+        } else if (source === 'car') {
+            updateCarStatus(selectedRow, status);
+        }}, [checkerror]);
 
     const fetchUserData = async () => {
         try {
@@ -177,7 +199,7 @@ function DetailsTable() {
             name: 'Actions', selector: row => (
                 <div>
                     <button className='accept-btn' onClick={() => updateUserDataStatus(row, 1)}>Accept</button>
-                    <button className='reject-btn' onClick={() => updateUserDataStatus(row, 2)}>Reject</button>
+                    <button className='reject-btn'  onClick={() => handleOpen(updateUserDataStatus,'personal',row, 2)}>Reject</button>
                 </div>
 
             ), center: true, width: '200px'
@@ -205,7 +227,7 @@ function DetailsTable() {
             name: 'Actions', selector: row => (
                 <div>
                     <button className='accept-btn' onClick={() => updateCarStatus(row, 1)}>Accept</button>
-                    <button className='reject-btn' onClick={() => updateCarStatus(row, 2)}>Reject</button>
+                    <button className='reject-btn'  onClick={() => handleOpen(updateCarStatus,'car',row, 2)}>Reject</button>
                 </div>
             ), center: true, width: '200px'
         }
@@ -229,7 +251,7 @@ function DetailsTable() {
             name: 'Actions', selector: row => (
                 <div >
                     <button className='accept-btn' onClick={() => updateLicenseStatus(row, 1)}>Accept</button>
-                    <button className='reject-btn' onClick={() => updateLicenseStatus(row, 2)}>Reject</button>
+                    <button className='reject-btn'  onClick={() => handleOpen(updateLicenseStatus,'license',row, 2)}>Reject</button>
                 </div>
             ), center: true, width: '200px'
         }
@@ -269,8 +291,9 @@ function DetailsTable() {
             const requestBody = { status: Status };
 
             if (Status === 2) {
-                setOpen(true);
-                requestBody.message = `userdata ID  has been refused.`;
+                let error = checkerror.toString();
+                requestBody.message = error;
+                console.log(`The error is: ${error}`);
             }
             else {
              alert(`Successfully updated status to: ${getStatusString(Status)} for Userdata ID :  ${userDataId}`);
@@ -288,7 +311,7 @@ function DetailsTable() {
             if (!response.ok) {
                 throw new Error(`Failed to update status: ${response.statusText}`);
             }
-            fetchUserData();
+            await fetchUserData();
 
 
         } catch (error) {
@@ -304,8 +327,9 @@ function DetailsTable() {
 
             const requestBody = { status: Status };
             if (Status === 2) {
-                setOpen(true);
-                requestBody.message = `License has been refused.`;
+                let error = checkerror.toString();
+                requestBody.message = error;
+                console.log(`The error is: ${error}`);
             }
             else {
                 alert(`Successfully updated status to: ${getStatusString(Status)} for Car ID ${carId}`);
@@ -337,8 +361,9 @@ function DetailsTable() {
 
             const requestBody = { status: Status };
            if (Status === 2) {
-                setOpen(true);
-                requestBody.message = `License has been refused.`;
+            let error = checkerror.toString();
+            requestBody.message = error;
+            console.log(`The error is: ${error}`);
             }
             else {
             alert(`Successfully updated status to: ${getStatusString(Status)} for license ID : ${licenseId}`);
@@ -401,7 +426,14 @@ function DetailsTable() {
                 pagination
             />
 
-            <RejectDialog open={open} handleClose={handleClose} />
+            <RejectDialog
+             open={open}
+             handleClose={handleClose}
+             updateStatus={updateStatusFunc} 
+             row={selectedRow} 
+             status={status} 
+             source={source}
+             />
 
             <Dialog open={openimg} onClose={handleCloseImg}  >
                 <DialogContent>

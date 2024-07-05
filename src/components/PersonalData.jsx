@@ -5,13 +5,23 @@ import Cookies from 'js-cookie';
 import RejectDialog from './RejectDialog';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent } from '@mui/material';
+import { StatusContext } from "../context/StatusContext";
 
 function PersonalData() {
+    const { checkerror } = useContext(StatusContext);
     const [personalData, setPersonalData] = useState([]);
     const navigate = useNavigate();
-    const [open, setOpen] = React.useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [openimg, setOpenImg] = useState(false);
+    const [open, setOpen] = React.useState(false);
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [status, setStatus] = useState(null);
+  
+    const handleOpen = (row, status) => {
+        setSelectedRow(row);
+        setStatus(status);
+        setOpen(true);
+    };
     const handleCloseImg = () => {
         setOpenImg(false);
         setSelectedImage(null);
@@ -19,6 +29,9 @@ function PersonalData() {
     const handleClose = () => {
         setOpen(false);
     };
+    useEffect(() => {
+        updateUserDataStatus(selectedRow, status);
+    }, [checkerror]);
     const fetchData = async () => {
         try {
             const token = document.cookie.split('; ').find(row => row.startsWith('token=')).split('=')[1];
@@ -91,7 +104,7 @@ function PersonalData() {
             name: 'Actions', selector: row => (
                 <div>
                     <button className='accept-btn' onClick={() => updateUserDataStatus(row, 1)}>Accept</button>
-                    <button className='reject-btn' onClick={() => updateUserDataStatus(row, 2)}>Reject</button>
+                    <button className='reject-btn'  onClick={() => handleOpen(row, 2)}>Reject</button>
                 </div>
             ), center: true, width: '200px'
         }
@@ -106,8 +119,9 @@ function PersonalData() {
             const requestBody = { status: Status };
 
             if (Status === 2) {
-                setOpen(true);
-                requestBody.message = `userdata ID  has been refused.`;
+                let error = checkerror.toString(); // Use checkerror from the context
+                requestBody.message = error;
+                console.log(`The error is: ${error}`);
             }
             else {
              alert(`Successfully updated status to: ${getStatusString(Status)} for Userdata ID :  ${userDataId}`);
@@ -172,7 +186,15 @@ function PersonalData() {
                 fixedHeader={true}
             />
           <RejectDialog open={open} handleClose={handleClose} />
-
+          
+          <RejectDialog 
+                open={open} 
+                handleClose={handleClose} 
+                updateStatus={updateUserDataStatus} 
+                row={selectedRow} 
+                status={status} 
+                source="personal"
+      />
         <Dialog open={openimg} onClose={handleCloseImg}  >
             <DialogContent>
                 {selectedImage && <img src={selectedImage} alt="Selected" style={{ width: "500px", height: "500px" }} />}
